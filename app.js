@@ -1191,7 +1191,29 @@ async function reject(id) {
 }
 
 async function delMatch(id) {
+async function deletePlayer(id) {
+  const player = state.players.find(p => p.id === id);
 
+  if (!player) return;
+
+  if (!confirm(
+    `Excluir o jogador ${player.name}?\n\n` +
+    `Essa ação removerá a inscrição da lista de jogadores.`
+  )) {
+    return;
+  }
+
+  try {
+    const result = await api('deletePlayer', { id });
+
+    state = result.data;
+
+    render();
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
   if (
     !confirm(
       'Excluir este resultado? A classificação será recalculada.'
