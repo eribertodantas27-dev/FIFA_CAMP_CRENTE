@@ -1,6 +1,258 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b7a4b"><title>FC Championship 5.0</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css"></head><body><header><div class="brand">⚽ <span>FC CHAMPIONSHIP<small>EA SPORTS FC</small></span></div><button id="menu">☰</button><nav><a href="#home">Início</a><a href="#inscricao">Inscrição</a><a href="#tabela">Tabela</a><a href="#jogadores">Jogadores</a><a href="#mata">Mata-mata</a><a href="#admin">Admin</a></nav></header><main>
-<section id="home" class="hero"><div><b class="tag">TEMPORADA 2026</b><h1>Seu campeonato, <em>online.</em></h1><p>Inscrições e resultados sincronizados para todos os celulares. Funciona no Chrome, Safari, Edge e Firefox.</p><a class="btn" href="#inscricao">Participar</a></div><div class="heroCard"><small>FASE ATUAL</small><strong id="phase">FASE DE GRUPOS</strong></div></section>
-<section class="stats"><div><b id="nPlayers">0</b><span>Jogadores</span></div><div><b id="nMatches">0</b><span>Partidas</span></div><div><b id="nPending">0</b><span>Pendentes</span></div><div><b>4</b><span>Grupos</span></div></section>
-<section id="inscricao" class="section"><h2>Inscrição</h2><form id="signup" class="card grid"><label>Nome<input id="name" required></label><label>Nick / ID<input id="nick" required></label><label>WhatsApp<input id="whatsapp" inputmode="tel"></label><label>Plataforma<select id="platform"><option>PS5</option><option>PS4</option><option>Xbox Series</option><option>Xbox One</option><option>PC</option></select></label><label>Time<input id="team"></label><button class="btn">Enviar inscrição</button><p id="signupMsg"></p></form></section>
-<section id="tabela" class="section"><h2>Classificação</h2><div id="tabs" class="tabs"></div><div id="tables"></div></section><section id="jogadores" class="section"><h2>Jogadores</h2><div id="players" class="cards"></div></section><section id="mata" class="section"><h2>Mata-mata</h2><div id="bracket" class="bracket"></div></section>
-<section id="admin" class="section"><h2>Painel administrativo</h2><div id="login" class="card"><input id="pass" type="password" placeholder="Senha do administrador"><button class="btn" id="loginBtn">Entrar</button><p id="loginMsg"></p></div><div id="panel" hidden><div class="adminTop"><div class="card"><h3>Resumo</h3><div id="summary"></div></div><div class="card"><h3>Configuração</h3><input id="cfgName" placeholder="Nome do campeonato"><select id="cfgPhase"><option>FASE DE GRUPOS</option><option>OITAVAS DE FINAL</option><option>QUARTAS DE FINAL</option><option>SEMIFINAL</option><option>FINAL</option><option>ENCERRADO</option></select><button class="btn small" id="saveCfg">Salvar</button></div></div><div class="card"><h3>Inscrições pendentes</h3><div id="pending"></div></div><div class="card"><h3>Lançar resultado</h3><form id="result" class="grid"><select id="p1"></select><input id="s1" type="number" min="0" value="0"><select id="p2"></select><input id="s2" type="number" min="0" value="0"><button class="btn">Salvar resultado</button></form><div id="results"></div></div><button class="btn ghost" id="logout">Sair</button></div></section></main><footer>FC Championship 5.0 • Dados online</footer><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="FC Championship 5.0 - Campeonato FIFA online">
+  <title>FC Championship 5.0</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container navWrap">
+      <a class="brand" href="#inicio">
+        <span class="brandMark">⚽</span>
+        <span>FC <b>Championship</b></span>
+      </a>
+
+      <button id="menu" class="menuBtn" aria-label="Abrir menu">☰</button>
+
+      <nav>
+        <a href="#inscricao">Inscrição</a>
+        <a href="#classificacao">Classificação</a>
+        <a href="#jogadores">Jogadores</a>
+        <a href="#mata-mata">Mata-mata</a>
+        <a href="#admin">Administrador</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero">
+      <div class="container heroGrid">
+        <div>
+          <span class="eyebrow">🏆 CAMPEONATO ONLINE</span>
+          <h1>FC Championship <span>5.0</span></h1>
+          <p>Inscrições, grupos, resultados, classificação e mata-mata em um só lugar.</p>
+          <div class="heroButtons">
+            <a class="btn" href="#inscricao">Participar do campeonato</a>
+            <a class="btn secondary" href="#classificacao">Ver classificação</a>
+          </div>
+        </div>
+
+        <div class="heroCard">
+          <span>FASE ATUAL</span>
+          <strong id="phase">FASE DE GRUPOS</strong>
+          <small>Atualização automática a cada 30 segundos.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="statsSection">
+      <div class="container stats">
+        <div class="stat"><b id="nPlayers">0</b><span>Jogadores</span></div>
+        <div class="stat"><b id="nMatches">0</b><span>Partidas</span></div>
+        <div class="stat"><b id="nPending">0</b><span>Inscrições pendentes</span></div>
+      </div>
+    </section>
+
+    <section id="inscricao" class="section">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+            <span class="eyebrow">PARTICIPE</span>
+            <h2>Faça sua inscrição</h2>
+          </div>
+          <p>Seu grupo será distribuído automaticamente.</p>
+        </div>
+
+        <form id="signup" class="form card">
+          <div class="formGrid">
+            <label>
+              Nome
+              <input id="name" required maxlength="80" placeholder="Seu nome">
+            </label>
+
+            <label>
+              Nick / ID
+              <input id="nick" required maxlength="40" placeholder="Seu nick no FIFA/EA FC">
+            </label>
+
+            <label>
+              WhatsApp
+              <input id="whatsapp" maxlength="30" placeholder="(85) 99999-9999">
+            </label>
+
+            <label>
+              Plataforma
+              <select id="platform">
+                <option>PS5</option>
+                <option>PS4</option>
+                <option>Xbox Series</option>
+                <option>Xbox One</option>
+                <option>PC</option>
+              </select>
+            </label>
+
+            <label class="full">
+              Time
+              <input id="team" maxlength="60" placeholder="Time que você pretende usar">
+            </label>
+          </div>
+
+          <button class="btn" type="submit">Enviar inscrição</button>
+          <p id="signupMsg" class="formMsg"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="classificacao" class="section alt">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+            <span class="eyebrow">FASE DE GRUPOS</span>
+            <h2>Classificação</h2>
+          </div>
+          <p>Os dois primeiros de cada grupo avançam.</p>
+        </div>
+
+        <div id="tabs" class="tabs"></div>
+        <div id="tables"></div>
+
+        <div class="legend">
+          <span><b>J</b> Jogos</span>
+          <span><b>V</b> Vitórias</span>
+          <span><b>E</b> Empates</span>
+          <span><b>D</b> Derrotas</span>
+          <span><b>GP</b> Gols pró</span>
+          <span><b>GC</b> Gols contra</span>
+          <span><b>SG</b> Saldo</span>
+          <span><b>PTS</b> Pontos</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="jogadores" class="section">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+            <span class="eyebrow">ELENCO</span>
+            <h2>Jogadores aprovados</h2>
+          </div>
+        </div>
+        <div id="players" class="cards"></div>
+      </div>
+    </section>
+
+    <section id="mata-mata" class="section alt">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+            <span class="eyebrow">FASE FINAL</span>
+            <h2>Mata-mata</h2>
+          </div>
+          <p>Quartas → Semifinais → Final</p>
+        </div>
+
+        <div id="bracket" class="bracket"></div>
+        <div id="champion" class="champion"></div>
+      </div>
+    </section>
+
+    <section id="admin" class="section">
+      <div class="container">
+        <div class="sectionHead">
+          <div>
+            <span class="eyebrow">ÁREA RESTRITA</span>
+            <h2>Administrador</h2>
+          </div>
+          <p>Gerencie inscrições, placares e mata-mata.</p>
+        </div>
+
+        <div id="login" class="card loginBox">
+          <label>
+            Senha do administrador
+            <input id="pass" type="password" autocomplete="current-password" placeholder="Digite sua senha">
+          </label>
+          <button id="loginBtn" class="btn">Entrar</button>
+          <p id="loginMsg" class="formMsg"></p>
+        </div>
+
+        <div id="panel" hidden>
+          <div id="summary" class="adminSummary"></div>
+
+          <div class="adminGrid">
+            <div class="card">
+              <div class="cardHead">
+                <h3>⚙️ Configuração</h3>
+              </div>
+              <label>
+                Nome do campeonato
+                <input id="cfgName">
+              </label>
+              <label>
+                Fase atual
+                <input id="cfgPhase">
+              </label>
+              <button id="saveCfg" class="btn">Salvar configuração</button>
+            </div>
+
+            <div class="card">
+              <div class="cardHead">
+                <h3>👥 Inscrições pendentes</h3>
+              </div>
+              <div id="pending"></div>
+            </div>
+          </div>
+
+          <div class="card adminCard">
+            <div class="cardHead">
+              <div>
+                <h3>⚽ Lançar resultado — fase de grupos</h3>
+                <p>Um confronto só pode ser registrado uma vez.</p>
+              </div>
+            </div>
+
+            <form id="result" class="resultForm">
+              <select id="p1" required></select>
+              <input id="s1" type="number" min="0" max="99" required placeholder="0">
+              <span>×</span>
+              <input id="s2" type="number" min="0" max="99" required placeholder="0">
+              <select id="p2" required></select>
+              <button class="btn" type="submit">Registrar</button>
+            </form>
+
+            <div class="resultsList">
+              <h4>Resultados registrados</h4>
+              <div id="results"></div>
+            </div>
+          </div>
+
+          <div class="card adminCard">
+            <div class="cardHead">
+              <div>
+                <h3>🏆 Mata-mata</h3>
+                <p>O sistema gera os confrontos e avança os vencedores automaticamente.</p>
+              </div>
+            </div>
+            <div id="knockoutAdmin"></div>
+          </div>
+
+          <button id="logout" class="btn danger">Sair do administrador</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <b>FC Championship 5.0</b>
+      <span>Campeonato FIFA online</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
