@@ -427,7 +427,31 @@ function renderBracket() {
 }
 
 function renderAdmin() {
+const approvedBox = $('approvedPlayers');
 
+if (approvedBox) {
+  approvedBox.innerHTML = state.players.length
+    ? state.players.map(p => `
+        <div class="pendingItem playerAdminItem">
+          <span>
+            <b>${esc(p.name)}</b>
+            <small>
+              ${esc(p.nick)} •
+              ${esc(p.platform)} •
+              Grupo ${esc(p.group)}
+            </small>
+          </span>
+
+          <button
+            class="btn small danger"
+            onclick="deletePlayer('${p.id}')"
+          >
+            🗑️ Excluir
+          </button>
+        </div>
+      `).join('')
+    : '<p class="empty">Nenhum jogador aprovado.</p>';
+}
   $('summary').innerHTML = `
 
     <div>
