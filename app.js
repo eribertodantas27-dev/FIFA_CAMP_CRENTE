@@ -1225,38 +1225,7 @@ async function deletePlayer(id) {
     const result =
       await api(
         'deleteMatch',
-        if (action === 'deletePlayer') {
-  const playerId = String(q.id || '').trim();
-
-  if (!playerId) {
-    throw new Error('Jogador não informado.');
-  }
-
-  const playerSheet = ss.getSheetByName('Players');
-  const values = playerSheet.getDataRange().getValues();
-
-  const row = values.findIndex(
-    x => x[0] === playerId
-  );
-
-  if (row < 1) {
-    throw new Error('Jogador não encontrado.');
-  }
-
-  // Não permite apagar jogador que já possui partida
-  const hasMatch = rows('Matches').some(
-    x => x[1] === playerId || x[4] === playerId
-  );
-
-  if (hasMatch) {
-    throw new Error(
-      'Não é possível excluir este jogador porque ele já possui partidas registradas.'
-    );
-  }
-
-  // Não permite apagar jogador que já está no mata-mata
-  const knockoutSheet = ss.getSheetByName('Knockout');
-
+      
   if (
     knockoutSheet &&
     knockoutSheet.getLastRow() > 1
