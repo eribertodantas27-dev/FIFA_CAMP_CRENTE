@@ -1,7 +1,80 @@
 const ADMIN_PASSWORD='fifadoscrente';
 function setup(){const ss=SpreadsheetApp.getActive();const sheets=['Config','Players','Matches'];const heads={Config:['key','value'],Players:['id','name','nick','whatsapp','platform','team','group','status','createdAt'],Matches:['id','p1','n1','s1','p2','n2','s2','createdAt']};sheets.forEach((n,i)=>{let sh=ss.getSheetByName(n)||ss.insertSheet(n);if(sh.getLastRow()===0)sh.appendRow(heads[n])});let cfg=ss.getSheetByName('Config');if(cfg.getLastRow()===1)cfg.getRange(2,1,2,2).setValues([['name','FC Championship 5.0'],['phase','FASE DE GRUPOS']]);return 'OK'}
 function doGet(){return ContentService.createTextOutput(JSON.stringify({ok:true,service:'crente Championship API'})).setMimeType(ContentService.MimeType.JSON)}
-function doPost(e){try{setup();const q=JSON.parse(e.postData.contents||'{}');const action=q.action;let out;switch(action){case'publicData':out=publicData();break;case'login':out=login(q.password);break;case'register':out=register(q.player);break;case'approve':out=admin(q,'approve');break;case'reject':out=admin(q,'reject');break;case'addMatch':out=admin(q,'addMatch');break;case'deleteMatch':case 'deletePlayer':
+function doPost(e){try{setup();const q=JSON.parse(e.postData.contents||'{}');const action=q.action;let out;switch(action){case'publicData':out=publicData();break;case'login':out=login(q.password);break;case'register':out=register(q.player);break;case'approve':out=admin(q,'approve');break;case'reject':out=admin(q,'reject');break;case'addMatch':out=admin(q,'addMatch');break;case'deleteMatch':if (action === 'deletePlayer') {
+  const playerId = String(q.id || '').trim();
+
+  if (!playerId) {
+    throw new Error('Jogador não informado.');
+  }
+
+  const playerSheet =
+    ss.getSheetByName('Players');
+
+  const playerValues =
+    playerSheet.getDataRange().getValues();
+
+  const playerRow =
+    playerValues.findIndex(
+      x => x[0] === playerId
+    );
+
+  if (playerRow < 1) {
+    throw new Error(
+      'Jogador não encontrado.'
+    );
+  }
+
+  // Não permite apagar jogador
+  // que já possui partida.
+  const hasGroupMatch =
+    rows('Matches').some(
+      x =>
+        x[1] === playerId ||
+        x[4] === playerId
+    );
+
+  if (hasGroupMatch) {
+    throw new Error(
+      'Não é possível excluir este jogador porque ele já possui partidas registradas. Exclua os resultados primeiro.'
+    );
+  }
+
+  // Proteção para o mata-mata.
+  const knockoutSheet =
+    ss.getSheetByName('Knockout');
+
+  if (
+    knockoutSheet &&
+    knockoutSheet.getLastRow() > 1
+  ) {
+    const hasKnockout =
+      knockoutSheet
+        .getDataRange()
+        .getValues()
+        .slice(1)
+        .some(
+          x =>
+            x[3] === playerId ||
+            x[6] === playerId ||
+            x[10] === playerId
+        );
+
+    if (hasKnockout) {
+      throw new Error(
+        'Não é possível excluir este jogador porque ele já está no mata-mata.'
+      );
+    }
+  }
+
+  playerSheet.deleteRow(
+    playerRow + 1
+  );
+
+  return {
+    data: adminData()
+  };
+}case 'deletePlayer':
   out = admin(q, 'deletePlayer');
   break;out=admin(q,'deleteMatch');break;case'saveConfig':out=admin(q,'saveConfig');break;default:throw Error('Ação inválida')}return json({ok:true,data:out.data||out,token:out.token})}catch(err){return json({ok:false,error:err.message})}}
 function json(x){return ContentService.createTextOutput(JSON.stringify(x)).setMimeType(ContentService.MimeType.JSON)}
